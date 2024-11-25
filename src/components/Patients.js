@@ -54,6 +54,7 @@ const Patients = () => {
   const handlePatientSelect = (patient) => {
     setActivePatient(patient);
   };
+  
   return (
     <div className="w-full max-w-[1564px] flex justify-between items-center gap-8 mt-8">
       {/* Left Column: Patients List */}
@@ -75,7 +76,7 @@ const Patients = () => {
 
       {/* Right Column: Patient Details and Lab Results */}
       <div>
-        <PatientDetails />
+        <PatientDetails data={activePatient} />
         <LabResult data={activePatient?.lab_results} />
       </div>
     </div>

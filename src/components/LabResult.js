@@ -1,7 +1,6 @@
 import download from "../assets/download.svg";
 
 const LabResult = ({ data }) => {
-  console.log(data);
   return (
     <div className="w-[367px] h-[296px] bg-white rounded-[16px] opacity-100 mt-8">
       <div className="text-[#072635] font-bold p-8 text-[24px]">
