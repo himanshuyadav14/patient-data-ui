@@ -76,7 +76,7 @@ const Patients = () => {
       {/* Right Column: Patient Details and Lab Results */}
       <div>
         <PatientDetails />
-        <LabResult data={activePatient.lab_results} />
+        <LabResult data={activePatient?.lab_results} />
       </div>
     </div>
   );
