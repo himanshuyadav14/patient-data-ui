@@ -70,7 +70,7 @@ const Patients = () => {
       {/* Middle Column: Diagnosis and Diagnostic */}
       <div>
         <DiagnosisHistory data={activePatient?.diagnosis_history} />
-        <DiagnosticList />
+        <DiagnosticList data={activePatient?.diagnostic_list} />
       </div>
 
       {/* Right Column: Patient Details and Lab Results */}
