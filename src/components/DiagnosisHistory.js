@@ -11,8 +11,6 @@ const DiagnosisHistory = ({ data }) => {
   const [filteredData, setFilteredData] = useState({});
 
   const [month, year] = activeMonth?.split(" ") || ["", ""];
-  console.log(month);
-  console.log(year);
 
   useEffect(() => {
     if (month && year) {
@@ -27,8 +25,6 @@ const DiagnosisHistory = ({ data }) => {
   const handleMonthSelect = (month) => {
     setActiveMonth(month);
   };
-
-  console.log("filteredData++++", filteredData);
 
   return (
     <div className="w-[766px] h-[673px] bg-white rounded-[16px] opacity-100">
