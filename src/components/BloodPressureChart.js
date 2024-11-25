@@ -23,12 +23,17 @@ ChartJS.register(
 
 const BloodPressureChart = ({ data }) => {
   const [timeRange, setTimeRange] = useState("Last 6 months");
+  const [hoveredData, setHoveredData] = useState({
+    systolic: null,
+    diastolic: null,
+    month: null,
+  });
 
   // Helper function to filter data based on the selected range
   const filterDataByRange = (range) => {
     const currentDate = new Date();
     const filteredData = data?.filter((item) => {
-      const itemDate = new Date(`${item.month} 1, ${item.year}`); // Assuming the month and year are available
+      const itemDate = new Date(`${item.month} 1, ${item.year}`);
       const diffInMonths =
         (currentDate.getFullYear() - itemDate.getFullYear()) * 12 +
         currentDate.getMonth() -
@@ -56,17 +61,20 @@ const BloodPressureChart = ({ data }) => {
     [data, timeRange]
   );
 
-  const latestSystolic =
-    filteredData?.[filteredData.length - 1]?.blood_pressure?.systolic?.value;
-  const latestDiastolic =
-    filteredData?.[filteredData.length - 1]?.blood_pressure?.diastolic?.value;
-
   // Format month names as abbreviations
   const formatMonth = (month, year) => {
     const date = new Date(`${month} 1, ${year}`);
     return new Intl.DateTimeFormat("en", { month: "short" }).format(date) + ",";
   };
 
+  // Get the latest systolic and diastolic values by default
+  const latestData = filteredData?.[filteredData.length - 1];
+  const latestSystolic =
+    latestData?.blood_pressure?.systolic?.value || "N/A";
+  const latestDiastolic =
+    latestData?.blood_pressure?.diastolic?.value || "N/A";
+
+  // Chart data
   const chartData = {
     labels: filteredData?.map(
       (item) => `${formatMonth(item.month, item.year)} ${item.year}`
@@ -116,15 +124,32 @@ const BloodPressureChart = ({ data }) => {
         max: 200,
       },
     },
+    onHover: (e, chartElement) => {
+      if (chartElement.length > 0) {
+        const index = chartElement[0].index;
+        const hoveredItem = filteredData[index];
+
+        // Only update if the data is different from the current state
+        if (
+          hoveredItem.blood_pressure.systolic.value !== hoveredData.systolic ||
+          hoveredItem.blood_pressure.diastolic.value !== hoveredData.diastolic ||
+          `${formatMonth(hoveredItem.month, hoveredItem.year)} ${hoveredItem.year}` !== hoveredData.month
+        ) {
+          setHoveredData({
+            systolic: hoveredItem.blood_pressure.systolic.value,
+            diastolic: hoveredItem.blood_pressure.diastolic.value,
+            month: `${formatMonth(hoveredItem.month, hoveredItem.year)} ${hoveredItem.year}`,
+          });
+        }
+      }
+    },
   };
 
   return (
     <div className="w-full h-auto p-6 bg-[#F4F0FE] rounded-lg shadow-md flex flex-col lg:flex-row justify-between">
       <div className="lg:w-[400px] mb-4 flex flex-col justify-between items-center lg:items-start">
         <div className="flex items-center justify-between gap-2 w-full">
-          <h2 className="text-xl font-semibold text-[#072635]">
-            Blood Pressure
-          </h2>
+          <h2 className="text-xl font-semibold text-[#072635]">Blood Pressure</h2>
           <select
             className="border rounded-md px-2 py-1 text-sm"
             value={timeRange}
@@ -147,18 +172,18 @@ const BloodPressureChart = ({ data }) => {
         <div className="p-4 rounded-lg shadow-sm mb-4 flex flex-col items-start gap-2">
           <div className="text-sm">Systolic</div>
           <div className="text-lg font-semibold text-purple-600">
-            {latestSystolic}
+            {hoveredData.systolic || latestSystolic}
           </div>
 
           <div className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
-            <span></span>Higher than Average
+            Higher than Average
           </div>
         </div>
 
         <div className="p-4 rounded-lg shadow-sm mb-4 flex flex-col items-start gap-2">
-          <div className="text-sm">Dystolic</div>
+          <div className="text-sm">Diastolic</div>
           <div className="text-lg font-semibold text-purple-600">
-            {latestSystolic}
+            {hoveredData.diastolic || latestDiastolic}
           </div>
 
           <div className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
