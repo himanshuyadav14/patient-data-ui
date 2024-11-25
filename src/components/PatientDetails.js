@@ -11,7 +11,7 @@ const PatientDetails = ({ data }) => {
       {/* Profile picture */}
       <div className="flex flex-col justify-between items-center gap-2">
         <img src={jessica} alt="" className="w-[200px] h-[200px] cursor-pointer" />
-        <div className="text-[24px] font-bold">{data.name}</div>
+        <div className="text-[24px] font-bold">{data?.name}</div>
       </div>
       {/* Info */}
       <div className="w-[310px] flex flex-col items-start gap-4 mt-8">
